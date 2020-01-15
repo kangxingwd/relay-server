@@ -1,0 +1,149 @@
+seelog = """
+<seelog>
+    <outputs formatid="main">
+        <filter levels="debug">
+                 <rollingfile type="size" filename="/var/log/remote/debug.log" maxsize="102400000" maxrolls="1000"/>
+        </filter>
+        <filter levels="info">
+                <rollingfile type="size" filename="/var/log/remote/common.log" maxsize="102400000" maxrolls="1000"/>
+        </filter>
+        <filter levels="error,critical">
+                <rollingfile type="size" filename="/var/log/remote/error.log" maxsize="102400000" maxrolls="1000"/>
+        </filter>
+    </outputs>
+    <formats>
+        <format id="main" format="[%LEV] %Date %Time %File:%Line %Msg%n"/>
+    </formats>
+</seelog>
+"""
+
+#seelog = """
+#<seelog>
+#    <outputs formatid="main">
+#        <filter levels="info,debug">
+#                 <rollingfile type="size" filename="/var/log/remote/common.log" maxsize="102400000" maxrolls="1000"/>
+#        </filter>
+#        <filter levels="error,critical">
+#                <rollingfile type="size" filename="/var/log/remote/error.log" maxsize="102400000" maxrolls="1000"/>
+#        </filter>
+#    </outputs>
+#    <formats>
+#        <format id="main" format="[%LEV] %Date %Time %File:%Line %Msg%n"/>
+#    </formats>
+#</seelog>
+#"""
+
+###############################################################################
+#
+#    Redis section
+#
+###############################################################################
+[Redis]
+# maximum number of idle connections.
+  size = 10
+
+# tcp or udp
+  network = "tcp"
+
+# host:port
+#address: 172.38.7.161:12279
+  address = "redis:6379"
+
+# redis client password
+ password = "123456"
+
+# Keys are defined in pairs to allow key rotation, but the common case is to set a single
+# authentication key and optionally an encryption key.
+  keyPairs = "itisasecret"
+
+  sessionDB = 0
+  accountLockDB = 3
+
+  sessionMaxAge = 600
+
+###############################################################################
+#
+#    MYSQL section
+#
+###############################################################################
+[Mysql]
+  user = "root"
+  password = "123456"
+  address = "mysql:3306"
+  dbname = "webdb"
+  # 是否开启gorm日志模式
+  logMode = false
+  maxIdleConns = 100
+  maxOpenConns = 3000
+
+###############################################################################
+#
+#    Common section
+#
+###############################################################################
+[Common]
+  # relay心跳时间
+  hearttimerelay = 30
+
+  # mcloud心跳时间
+  hearttimemcloud = 120
+
+  #	relay超时时间
+  htrelaytimeout = 45
+
+  # relay断开删除时间 （默认30分钟）
+  htrelaydelete = 1800
+
+  # mcloud超时时间
+  htmcloudtimeout = 180
+
+  # mcloud断开删除时间 （默认90分钟）
+  htmclouddelete = 5400
+
+  # 黑名单开关
+  relayforbidswitch = 1
+
+  # 黑名单统计时间
+  forbidcounttime = 120
+
+  # 统计时间内需要加入黑名单的失败比例
+  forbidfailedratio = 0.5
+
+  # 封禁时间
+  forbidtime = 120
+
+  # relay允许连接的最大mcloud数量
+  maxmcloudnum = 100
+
+  # relay负载标准之一，表示cpu最大使用率(1 - 100)
+  maxRelayCpuPercent = 90
+
+  # relay负载标准之一， 表示relay最小内存(1 - 100)
+  maxRelayMemPercent = 98
+
+  # relay分配个数
+  allocrelaynum = 3
+
+  # 删除 mcloud连接的relay记录的时间, 一般与封禁时间一致
+  deleteRalayRecordTime = 60
+
+###############################################################################
+#
+#    DNS section
+#
+###############################################################################
+[DNS]
+  dnsfilepath = "/etc/bind/"
+  nasdnsfilename = "/etc/bind/db.onas.tenbay.cn"
+  nasdnsbkfilename = "/etc/bind/db.onas.tenbay.cn_bk"
+
+  # DNS 配置更新时间
+  DnsConfUpdateTime = 5
+
+###############################################################################
+#
+#    WebSvr section
+#
+###############################################################################
+[WebSvr]
+  port = ":8008"

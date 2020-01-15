@@ -1,0 +1,23 @@
+
+# 中心服务器页面
+
+server {
+        listen       80;
+        server_name  localhost;
+
+        location ~ /admin {
+                root /var/www;
+                index index.html;
+        }
+
+        location /manage {
+            # 4000为后台代码端口，若冲突可更改
+            proxy_pass http://apisrv:4000;
+        }
+
+        # location ~ /manage/(.*) {
+        #     # 4000为后台代码端口，若冲突可更改
+        #     proxy_pass http://apisrv:4000/$1?$args;
+        # }
+	}
+	

@@ -1,0 +1,9 @@
+{
+	"online_upgrade_path":"/var/attachment/online_upgrade/firmware/",
+	"pre_download_path":"http://aonas.oricogroup.com:8091/version/firmware/",
+	"version_download_mesg_path":"/var/attachment/online_upgrade/version.json",
+	"notity_enable_path":"/var/attachment/online_upgrade/config/notity_enable.json",
+	"dir_change_time_path":"/var/attachment/online_upgrade/config/dir_change_time.json",
+	"app_version_path":"/var/attachment/online_upgrade/app_version.json",
+	"upgrade_file_name":"upgrade.html"
+} 

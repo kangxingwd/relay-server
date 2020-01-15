@@ -1,0 +1,10 @@
+
+# 广告
+server {
+        listen 8090;
+        server_name localhost;
+        location ~ /ad {
+            root /var/www;
+        }
+	}
+

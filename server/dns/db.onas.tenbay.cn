@@ -1,0 +1,10 @@
+$TTL    60
+@       IN      SOA     onas.tenbay.cn. root.onas.tenbay.cn. (
+                              3         ; Serial
+                            180         ; Refresh
+                            180         ; Retry
+                            600         ; Expire
+                            180 )       ; Negative Cache TTL
+;
+@       IN      NS      onas.tenbay.cn.
+@       IN      A       39.98.177.46

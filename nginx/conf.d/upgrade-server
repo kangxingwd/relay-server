@@ -1,0 +1,29 @@
+# 升级服务器
+
+autoindex on;# 显示目录
+autoindex_exact_size on;# 显示文件大小
+autoindex_localtime on;# 显示文件时间
+
+server {
+    listen       8091;
+    server_name  localhost;
+
+    #access_log  /var/log/nginx/host.access.log  main;
+
+    # ac 接口, version.json
+    location /version {
+        alias /var/upgrade-server/;
+        #/var/attachment/online_upgrade
+    }
+
+    # app 接口
+     location /appdeal/ {
+           proxy_pass http://upgrade-server:8000;
+        }
+
+    # normal 接口
+     location /api/ {
+           proxy_pass http://upgrade-server:8000;
+        }
+}
+

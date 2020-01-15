@@ -1,0 +1,125 @@
+version: "3"
+
+services:
+  nginx:
+    image: nginx
+    restart: always
+    volumes:
+      - /var/remote/webui:/var/www
+      - ./nginx/sa:/etc/nginx/sa
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - /var/remote/nginx/log:/var/log/nginx
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone
+      - /var/remote/upgrade-server/:/var/upgrade-server/
+    ports:
+      - "8090:8090"
+      - "8089:443"
+      - "8088:80"
+      - "8091:8091"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "10"
+    depends_on:
+      - remote_server
+      - apisrv
+      - upgrade-server
+    networks:
+      - remote
+
+  redis:
+    image: redis
+    restart: always
+    command: [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "10"
+    networks:
+      - remote
+
+  mysql:
+    image: mariadb
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: webdb     # 创建数据库
+    volumes:
+      - /var/remote/db/mariadb:/var/lib/mysql
+      - ./mariadb/conf.d:/etc/mysql/mariadb.conf.d
+      - ./mariadb/init.sql:/docker-entrypoint-initdb.d/init.sql
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "10"
+    ports:
+      - "3306:3306"
+    networks:
+      - remote
+
+  remote_server:
+    build: ./server
+    restart: always
+    ports:
+      - "53:53"
+      - "53:53/udp"
+    volumes:
+      - /var/remote/webui/ad:/var/www/ad
+      - /var/remote/remote-server/log:/var/log/remote
+      - ./server/resolv.conf:/etc/resolv.conf
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone
+      # - /var/remote_dns/db.nas.tenbay.cn:/etc/bind/db.nas.tenbay.cn
+      # - /var/remote_dns/db.nas.tenbay.cn_bk:/etc/bind/db.nas.tenbay.cn_bk
+      # - /var/remote_dns/named.conf.local:/etc/bind/named.conf.local
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "10"
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - remote
+
+  apisrv:
+    build: ./apisrv
+    restart: always
+    volumes:
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "10"
+    networks:
+      - remote
+
+  upgrade-server:
+    build: ./upgrade-server
+    restart: always
+    volumes:
+      - /var/remote/upgrade-server:/var/attachment/online_upgrade
+      - /etc/localtime:/etc/localtime
+      - /etc/timezone:/etc/timezone
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "10"
+    networks:
+    - remote
+
+networks:
+  remote:
+
